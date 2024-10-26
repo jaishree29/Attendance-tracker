@@ -1,9 +1,14 @@
+import 'package:employee_attendance_tracker/splash_screen.dart';
+import 'package:employee_attendance_tracker/utils/constants/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
+  String envFilePath = '.env';
+
+  await dotenv.load(fileName: envFilePath);
   WidgetsFlutterBinding.ensureInitialized();
 
   FirebaseOptions firebaseOptions = FirebaseOptions(
@@ -25,6 +30,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp();
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(statusBarColor: FColors.primary),
+      child: MaterialApp(
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ),
+    );
   }
 }
