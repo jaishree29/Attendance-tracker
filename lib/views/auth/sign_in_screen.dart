@@ -1,12 +1,11 @@
 import 'package:employee_attendance_tracker/controllers/auth_controller.dart';
-import 'package:employee_attendance_tracker/navigation_page.dart';
-import 'package:employee_attendance_tracker/splash_screen.dart';
+import 'package:employee_attendance_tracker/models/role.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
-import 'package:employee_attendance_tracker/views/auth/sign_up_screen.dart';
+import 'package:employee_attendance_tracker/views/admin/admin_panel.dart';
+import 'package:employee_attendance_tracker/views/home/home_page.dart';
 import 'package:employee_attendance_tracker/widgets/elevated_button.dart';
 import 'package:employee_attendance_tracker/widgets/text_field_input.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -33,42 +32,33 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     try {
-      // Sign in the user with email and password
+      // Sign in the user
       final user =
           await _authController.signInWithEmailPassword(email, password);
 
-      if (!mounted) return;
-
-      // If sign-in is successful
       if (user != null) {
-        // Store login state in SharedPreferences
-        var sharedPref = await SharedPreferences.getInstance();
-        sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Welcome back, ${user.email}!")),
-        );
-
-        // Navigate to the next page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const NavigationPage()),
-        );
-      } else {
-        // If the user is not found, prompt them to sign up
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("User does not exist. Please sign up first.")),
-        );
+        // Check permissions and navigate based on the role
+        if (user.role == UserRole.admin) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminPanel(user: user)),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(user: user)),
+          );
+        }
       }
     } catch (e) {
-      // Handle any errors during sign-in (like wrong credentials)
       print("Sign-in error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to sign in: ${e.toString()}")),
       );
     }
   }
+
 
   @override
   void dispose() {
@@ -121,29 +111,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
               const SizedBox(height: 50),
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Don\'t have an account?',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  TextButton(
-                    onPressed: () => {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpScreen(),
-                        ),
-                      ),
-                    },
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

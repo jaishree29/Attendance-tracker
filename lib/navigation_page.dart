@@ -1,9 +1,14 @@
+import 'package:employee_attendance_tracker/models/role.dart';
+import 'package:employee_attendance_tracker/models/user_model.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
 import 'package:employee_attendance_tracker/views/home/home_page.dart';
 import 'package:flutter/material.dart';
 
+// Assume UserModel is already defined with UserRole enum and necessary details
 class NavigationPage extends StatefulWidget {
-  const NavigationPage({super.key});
+  final UserModel user;
+
+  const NavigationPage({super.key, required this.user});
 
   @override
   State<NavigationPage> createState() => _NavigationPageState();
@@ -12,9 +17,94 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   int myCurrentIndex = 0;
 
-  final List<Widget> pages = [
-    const HomePage(),
-  ];
+  late List<Widget> pages;
+  late List<BottomNavigationBarItem> navBarItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNavigation();
+  }
+
+  void _initializeNavigation() {
+    switch (widget.user.role) {
+      case UserRole.admin:
+        pages = [
+          HomePage(user: widget.user),
+        ];
+        navBarItems = const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dining_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner),
+            label: 'Scan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ];
+        break;
+
+      case UserRole.guardEmployee:
+        pages = [
+          HomePage(user: widget.user),
+        ];
+        navBarItems = const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dining_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner),
+            label: 'Scan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ];
+        break;
+
+      case UserRole.supervisorEmployee:
+        pages = [
+          HomePage(user: widget.user),
+        ];
+        navBarItems = const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dining_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ];
+        break;
+
+      default:
+        pages = [
+          HomePage(user: widget.user),
+        ];
+        navBarItems = const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dining_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ];
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,28 +133,10 @@ class _NavigationPageState extends State<NavigationPage> {
             selectedItemColor: FColors.primary,
             unselectedItemColor: FColors.secondary,
             type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dining_outlined),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.payment),
-                label: 'Orders',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.emoji_emotions_outlined),
-                label: 'Vibe',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
+            items: navBarItems,
           ),
         ),
       ),
-      // Regular pages for Home and Profile
       body: pages[myCurrentIndex],
     );
   }
