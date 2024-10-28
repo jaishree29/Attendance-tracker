@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:employee_attendance_tracker/controllers/auth_controller.dart';
 import 'package:employee_attendance_tracker/models/role.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
@@ -5,7 +6,6 @@ import 'package:employee_attendance_tracker/views/admin/admin_panel.dart';
 import 'package:employee_attendance_tracker/views/home/home_page.dart';
 import 'package:employee_attendance_tracker/widgets/elevated_button.dart';
 import 'package:employee_attendance_tracker/widgets/text_field_input.dart';
-import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,26 +18,29 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthController _authController = AuthController();
+  UserRole? _selectedRole; 
 
-  // Sign-In with Email and Password
+  // Sign-In with Email, Password, and Role
   void _handleSignIn() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty || _selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields.")),
+        const SnackBar(
+            content: Text("Please fill in all fields and select a role.")),
       );
       return;
     }
 
     try {
-      // Sign in the user
-      final user =
-          await _authController.signInWithEmailPassword(email, password);
+      final user = await _authController.signInWithEmailPassword(
+        email,
+        password,
+        _selectedRole!, 
+      );
 
       if (user != null) {
-        // Check permissions and navigate based on the role
         if (user.role == UserRole.admin) {
           Navigator.pushReplacement(
             context,
@@ -46,8 +49,7 @@ class _SignInScreenState extends State<SignInScreen> {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) => HomePage(user: user)),
+            MaterialPageRoute(builder: (context) => HomePage(user: user)),
           );
         }
       }
@@ -58,7 +60,6 @@ class _SignInScreenState extends State<SignInScreen> {
       );
     }
   }
-
 
   @override
   void dispose() {
@@ -95,6 +96,26 @@ class _SignInScreenState extends State<SignInScreen> {
                     icon: Icons.lock,
                     isPass: true,
                     textController: _passwordController,
+                  ),
+
+                  // Role Dropdown
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: DropdownButton<UserRole>(
+                      value: _selectedRole,
+                      hint: const Text("Select Role"),
+                      items: UserRole.values.map((UserRole role) {
+                        return DropdownMenuItem<UserRole>(
+                          value: role,
+                          child: Text(role.toString().split('.').last),
+                        );
+                      }).toList(),
+                      onChanged: (UserRole? newRole) {
+                        setState(() {
+                          _selectedRole = newRole;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),

@@ -12,6 +12,12 @@ class AdminPanel extends StatefulWidget {
 class _AdminPanelState extends State<AdminPanel> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Text('Hello this is admin'),
+        ),
+      ),
+    );
   }
 }

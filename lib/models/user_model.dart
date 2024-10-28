@@ -11,8 +11,18 @@ class UserModel {
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    UserRole role = UserRole.values
-        .firstWhere((e) => e.toString() == 'UserRole + ${data['role']}');
+
+    UserRole? role;
+    try {
+      role = UserRole.values.firstWhere(
+        (e) => e.toString() == 'UserRole.${data['role']}',
+        orElse: () => UserRole.generalEmployee,
+      );
+      print(role);
+    } catch (e) {
+      print("Error parsing user role: $e");
+      role = UserRole.generalEmployee;
+    }
 
     return UserModel(
       uid: data['uid'],
