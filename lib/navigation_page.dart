@@ -1,10 +1,9 @@
 import 'package:employee_attendance_tracker/models/role.dart';
 import 'package:employee_attendance_tracker/models/user_model.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
-import 'package:employee_attendance_tracker/views/home/home_page.dart';
+import 'package:employee_attendance_tracker/pages/users/home_page.dart';
 import 'package:flutter/material.dart';
 
-// Assume UserModel is already defined with UserRole enum and necessary details
 class NavigationPage extends StatefulWidget {
   final UserModel user;
 

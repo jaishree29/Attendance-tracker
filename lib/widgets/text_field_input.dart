@@ -7,10 +7,12 @@ class NTextFieldInput extends StatelessWidget {
     required this.icon,
     required this.isPass,
     required this.textController,
+    required this.isPhone,
   });
 
   final TextEditingController textController;
   final bool isPass;
+  final bool isPhone;
   final String hintText;
   final IconData icon;
 
@@ -21,6 +23,7 @@ class NTextFieldInput extends StatelessWidget {
       child: TextFormField(
         controller: textController,
         obscureText: isPass,
+        keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: const TextStyle(fontSize: 20),

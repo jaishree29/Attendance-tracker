@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:employee_attendance_tracker/controllers/auth_controller.dart';
 import 'package:employee_attendance_tracker/models/role.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
-import 'package:employee_attendance_tracker/views/admin/admin_panel.dart';
-import 'package:employee_attendance_tracker/views/home/home_page.dart';
+import 'package:employee_attendance_tracker/pages/admin/admin_panel.dart';
+import 'package:employee_attendance_tracker/pages/users/home_page.dart';
 import 'package:employee_attendance_tracker/widgets/elevated_button.dart';
 import 'package:employee_attendance_tracker/widgets/text_field_input.dart';
 
@@ -86,6 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   NTextFieldInput(
                     hintText: 'Email',
                     icon: Icons.email,
+                    isPhone: false,
                     isPass: false,
                     textController: _emailController,
                   ),
@@ -94,6 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   NTextFieldInput(
                     hintText: 'Password',
                     icon: Icons.lock,
+                    isPhone: false,
                     isPass: true,
                     textController: _passwordController,
                   ),

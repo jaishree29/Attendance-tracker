@@ -1,4 +1,4 @@
-import 'package:employee_attendance_tracker/splash_screen.dart';
+import 'package:employee_attendance_tracker/pages/auth/phoneauth.dart';
 import 'package:employee_attendance_tracker/utils/constants/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const PhoneAuth(),
       ),
     );
   }
